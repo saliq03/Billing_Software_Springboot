@@ -24,6 +24,7 @@ public class UserController {
             return userService.createUser(userRequest);
         }
         catch (Exception e){
+
             throw  new ResponseStatusException(HttpStatus.BAD_REQUEST,"Unable to create user "+ e.getMessage());
         }
 

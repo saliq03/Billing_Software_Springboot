@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     BCryptPasswordEncoder passwordEncoder= new BCryptPasswordEncoder(12);
     @Override
     public UserResponse createUser(UserRequest userRequest) {
