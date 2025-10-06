@@ -14,13 +14,12 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/categories")
 @RequiredArgsConstructor
 public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @PostMapping
+    @PostMapping("/admin/categories")
     @ResponseStatus(HttpStatus.CREATED)
     public CategoryResponse addCategory(@RequestPart("data") String data, @RequestPart("file")MultipartFile file) {
         ObjectMapper mapper = new ObjectMapper();
@@ -34,12 +33,13 @@ public class CategoryController {
 
     }
 
-    @GetMapping
+    @GetMapping("/categories")
     @ResponseStatus(HttpStatus.OK)
     public List<CategoryResponse> fetchCategories() {
         return  categoryService.read();
     }
-    @GetMapping("/{categoryId}")
+
+    @GetMapping("/categories/{categoryId}")
     public CategoryResponse fetchByCategoryId(@PathVariable String categoryId) {
         try{
             return categoryService.readByCategoryId(categoryId);
@@ -49,8 +49,10 @@ public class CategoryController {
         }
 
     }
+
+
+    @DeleteMapping("/admin/categories/{categoryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/{categoryId}")
     public void remove(@PathVariable String categoryId) {
         try{
             categoryService.delete(categoryId);
