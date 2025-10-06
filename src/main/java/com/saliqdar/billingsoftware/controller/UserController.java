@@ -39,12 +39,14 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable String id){
 
-        try{
+//        try{
             userService.deleteUser(id);
-        }
-        catch (Exception e){
-            throw  new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found\n"+ e.getMessage());
-        }
+//        }
+//        catch (Exception e){
+//            System.out.println(e.getMessage());
+//            e.printStackTrace();
+//            throw  new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
+//        }
     }
 
 

@@ -1,6 +1,7 @@
 package com.saliqdar.billingsoftware.service.impl;
 
 import com.saliqdar.billingsoftware.entity.UserEntity;
+import com.saliqdar.billingsoftware.exception.UserNotFoundException;
 import com.saliqdar.billingsoftware.io.UserRequest;
 import com.saliqdar.billingsoftware.io.UserResponse;
 import com.saliqdar.billingsoftware.repository.UserRepository;
@@ -66,7 +67,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(String id) {
      UserEntity userEntity=userRepository.findByUserId(id)
-             .orElseThrow(()-> new UsernameNotFoundException("User not found for id "+id));
+             .orElseThrow(()-> new UserNotFoundException("User not found for id "+id));
      userRepository.delete(userEntity);
     }
 }
