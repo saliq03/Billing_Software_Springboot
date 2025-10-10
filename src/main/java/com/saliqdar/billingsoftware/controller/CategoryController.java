@@ -1,6 +1,7 @@
 package com.saliqdar.billingsoftware.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.saliqdar.billingsoftware.exception.BadRequestException;
 import com.saliqdar.billingsoftware.io.CategoryRequest;
 import com.saliqdar.billingsoftware.io.CategoryResponse;
 import com.saliqdar.billingsoftware.service.CategoryService;
@@ -8,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
+
 
 import java.util.List;
 import java.util.UUID;
@@ -28,7 +29,8 @@ public class CategoryController {
             return categoryService.add(request,file);
         }
         catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            System.out.println(e.getMessage());
+            throw new BadRequestException(e.getMessage());
         }
 
     }
@@ -41,24 +43,14 @@ public class CategoryController {
 
     @GetMapping("/categories/{categoryId}")
     public CategoryResponse fetchByCategoryId(@PathVariable String categoryId) {
-        try{
             return categoryService.readByCategoryId(categoryId);
-        }
-        catch(Exception e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-
     }
 
 
     @DeleteMapping("/admin/categories/{categoryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remove(@PathVariable String categoryId) {
-        try{
             categoryService.delete(categoryId);
-        }
-        catch(Exception e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
+
     }
 }
