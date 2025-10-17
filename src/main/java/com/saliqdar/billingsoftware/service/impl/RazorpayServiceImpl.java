@@ -3,6 +3,7 @@ package com.saliqdar.billingsoftware.service.impl;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
+import com.saliqdar.billingsoftware.io.PaymentRequest;
 import com.saliqdar.billingsoftware.io.RazorpayOrderResponse;
 import com.saliqdar.billingsoftware.service.RazorpayService;
 import org.json.JSONObject;
@@ -12,13 +13,13 @@ public class RazorpayServiceImpl implements RazorpayService {
     @Value("$razorpay.key.id")
     private String razorpayKeyId;
     @Value("$razorpay.key.secret")
-    private String razorpaySecretKey;
+    private String razorpayKeySecret;
     @Override
-    public RazorpayOrderResponse createOrder(Double amount, String currency) throws RazorpayException {
-        RazorpayClient razorpayClient = new RazorpayClient(razorpaySecretKey,razorpaySecretKey);
+    public RazorpayOrderResponse createOrder(PaymentRequest paymentRequest) throws RazorpayException {
+        RazorpayClient razorpayClient = new RazorpayClient(razorpayKeyId,razorpayKeySecret);
         JSONObject orderRequest = new JSONObject();
-        orderRequest.put("amount",amount*1000);
-        orderRequest.put("currency",currency);
+        orderRequest.put("amount",paymentRequest.getAmount()*1000);
+        orderRequest.put("currency",paymentRequest.getCurrency());
         orderRequest.put("receipt","order_rcptid "+System.currentTimeMillis());
         orderRequest.put("payment_capture",1);
         Order order=razorpayClient.orders.create(orderRequest);
