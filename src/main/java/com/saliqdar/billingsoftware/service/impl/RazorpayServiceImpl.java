@@ -8,11 +8,13 @@ import com.saliqdar.billingsoftware.io.RazorpayOrderResponse;
 import com.saliqdar.billingsoftware.service.RazorpayService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
+@Service
 public class RazorpayServiceImpl implements RazorpayService {
-    @Value("$razorpay.key.id")
+    @Value("${razorpay.key.id}")
     private String razorpayKeyId;
-    @Value("$razorpay.key.secret")
+    @Value("${razorpay.key.secret}")
     private String razorpayKeySecret;
     @Override
     public RazorpayOrderResponse createOrder(PaymentRequest paymentRequest) throws RazorpayException {
@@ -32,6 +34,7 @@ public class RazorpayServiceImpl implements RazorpayService {
                 .amount(order.get("amount"))
                 .currency(order.get("currency"))
                 .receipt(order.get("receipt"))
+                .entity(order.get("entity"))
                 .createdAt(order.get("created_at"))
                 .status(order.get("status"))
                 .build();

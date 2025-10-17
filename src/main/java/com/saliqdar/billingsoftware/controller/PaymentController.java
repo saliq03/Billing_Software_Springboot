@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaymentController {
     private  final RazorpayService razorpayService;
 
-    @PostMapping
+    @PostMapping("/create_order")
     public RazorpayOrderResponse createPayment(@RequestBody PaymentRequest paymentRequest) throws RazorpayException {
         return razorpayService.createOrder(paymentRequest);
     }
