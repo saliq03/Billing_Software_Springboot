@@ -3,10 +3,7 @@ package com.saliqdar.billingsoftware.service.impl;
 import com.saliqdar.billingsoftware.entity.OrderEntity;
 import com.saliqdar.billingsoftware.entity.OrderItemEntity;
 import com.saliqdar.billingsoftware.exception.NotFoundException;
-import com.saliqdar.billingsoftware.io.OrderRequest;
-import com.saliqdar.billingsoftware.io.OrderResponse;
-import com.saliqdar.billingsoftware.io.PaymentDetails;
-import com.saliqdar.billingsoftware.io.PaymentMethod;
+import com.saliqdar.billingsoftware.io.*;
 import com.saliqdar.billingsoftware.repository.OrderRepository;
 import com.saliqdar.billingsoftware.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -103,5 +100,26 @@ public class OrderServiceImpl implements OrderService {
                 .stream()
                 .map(this::convertToOrderResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public OrderResponse verifyPayment(PaymentVerificationRequest request) {
+        OrderEntity orderEntity=orderRepository.findByOrderId(request.getOrderId())
+                .orElseThrow(()->new NotFoundException("Order not found with id: " + request.getOrderId()));
+        if(!verifyRazorpaySignature(request.getRazorpayOrderId(), request.getRazorpayPaymentId(), request.getRazorpaySignature())){
+            throw new RuntimeException("Payment verification failed");
+        }
+        PaymentDetails paymentDetails = orderEntity.getPaymentDetails();
+        paymentDetails.setStatus(PaymentDetails.PaymentStatus.COMPLETED);
+        paymentDetails.setRazorpaySignature(request.getRazorpaySignature());
+        paymentDetails.setRazorpayOrderId(request.getRazorpayOrderId());
+        paymentDetails.setRazorpayPaymentId(request.getRazorpayPaymentId());
+
+        orderEntity=orderRepository.save(orderEntity);
+        return convertToOrderResponse(orderEntity);
+    }
+
+    private boolean verifyRazorpaySignature(String razorpayOrderId, String razorpayPaymentId, String razorpaySignature) {
+        return true;
     }
 }
